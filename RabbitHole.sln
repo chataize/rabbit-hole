@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitHole", "src\RabbitHole.csproj", "{B5B67079-8787-4B93-A811-CE5345AE5690}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitHolePreview", "preview\RabbitHolePreview.csproj", "{F431B139-161C-4E7A-9586-7FBCE1DF092C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{B5B67079-8787-4B93-A811-CE5345AE5690}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5B67079-8787-4B93-A811-CE5345AE5690}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5B67079-8787-4B93-A811-CE5345AE5690}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F431B139-161C-4E7A-9586-7FBCE1DF092C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F431B139-161C-4E7A-9586-7FBCE1DF092C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F431B139-161C-4E7A-9586-7FBCE1DF092C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F431B139-161C-4E7A-9586-7FBCE1DF092C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

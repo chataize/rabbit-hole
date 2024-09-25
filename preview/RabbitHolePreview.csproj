@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Product>Rabbit Hole Preview</Product>
+    <Version>0.1.0</Version>
+    <Company>ChatAIze</Company>
+    <Authors>Marcel Kwiatkowski</Authors>
+    <Copyright>© ChatAIze 2024</Copyright>
+    <AssemblyName>ChatAIze.RabbitHole.Preview</AssemblyName>
+    <RootNamespace>ChatAIze.RabbitHole.Preview</RootNamespace>
+    <PackageId>ChatAIze.RabbitHole.Preview</PackageId>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://www.chataize.com</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/chataize/rabbit-hole/releases</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/chataize/rabbit-hole</RepositoryUrl>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>
