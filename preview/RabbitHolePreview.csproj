@@ -18,6 +18,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
+    <Description>
+      C# library for scraping text content from websites.
+    </Description>
+    <PackageTags>
+      .net, c#, content, csharp, document, documents, download, downloader, downloading, extract,
+      extracting, extractor, html, http, https, library, link, links, net, online, page, pages,
+      parse, parser, parsing, scrape, scraper, scraping, search, searching, site, sites, string,
+      strings, text, uri, uris, url, urls, web, webpage, webpages, website, websites
+    </PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
