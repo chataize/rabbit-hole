@@ -5,7 +5,7 @@ using HtmlAgilityPack;
 
 namespace ChatAIze.RabbitHole;
 
-public sealed class WebsiteScrapper
+public sealed class WebsiteScraper
 {
     private static readonly FrozenSet<string> ignoredExtensions = new List<string>(
     [

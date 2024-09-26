@@ -1,6 +1,6 @@
 ﻿using ChatAIze.RabbitHole;
 
-var scraper = new WebsiteScrapper();
+var scraper = new WebsiteScraper();
 
 await foreach (var link in scraper.ScrapeLinksAsync("https://chataize.com"))
 {
