@@ -1,5 +1,6 @@
 ﻿using System.Collections.Frozen;
 using System.Runtime.CompilerServices;
+using System.Text;
 using HtmlAgilityPack;
 
 namespace ChatAIze.RabbitHole;
@@ -93,7 +94,7 @@ public sealed class WebsiteScrapper
                 continue;
             }
 
-            var response = await _httpClient.GetAsync(currentUrl.Url, cancellationToken);
+            using var response = await _httpClient.GetAsync(currentUrl.Url, cancellationToken);
             if (!response.IsSuccessStatusCode || !response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != false)
             {
                 continue;
@@ -148,6 +149,64 @@ public sealed class WebsiteScrapper
                 }
             }
         }
+    }
+
+    public async Task<string> ScrapeContentAsync(string? url, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return string.Empty;
+        }
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+        {
+            return string.Empty;
+        }
+
+        using var response = await _httpClient.GetAsync(uri, cancellationToken);
+        if (!response.IsSuccessStatusCode || !response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != false)
+        {
+            return string.Empty;
+        }
+
+        var htmlDocument = new HtmlDocument();
+        using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
+        htmlDocument.Load(contentStream);
+
+        var root = htmlDocument.DocumentNode;
+        var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]");
+
+        if (contentNode == null)
+        {
+            return string.Empty;
+        }
+
+        var stringBuilder = new StringBuilder();
+        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//p"))
+        {
+            switch (node.Name)
+            {
+                case "h1":
+                    stringBuilder.AppendLine($"# {node.InnerText.Trim()}");
+                    stringBuilder.AppendLine();
+                    break;
+                case "h2":
+                    stringBuilder.AppendLine($"## {node.InnerText.Trim()}");
+                    stringBuilder.AppendLine();
+                    break;
+                case "h3":
+                    stringBuilder.AppendLine($"### {node.InnerText.Trim()}");
+                    stringBuilder.AppendLine();
+                    break;
+                case "p":
+                    stringBuilder.AppendLine(node.InnerText.Trim());
+                    stringBuilder.AppendLine();
+                    break;
+            }
+        }
+
+        return stringBuilder.ToString();
     }
 
     private record LinkCandidate(string Url, int Depth);
