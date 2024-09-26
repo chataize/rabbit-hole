@@ -71,9 +71,10 @@ public sealed class WebsiteScraper
             yield break;
         }
 
+        yield return url;
+
         if (depth < 1)
         {
-            yield return url;
             yield break;
         }
 
