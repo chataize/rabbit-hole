@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using ChatAIze.RabbitHole;
+
+var scraper = new WebsiteScrapper();
+
+await foreach (var link in scraper.ScrapeLinksAsync("https://chataize.com"))
+{
+    Console.WriteLine(link);
+}
+
+var homePageContent = await scraper.ScrapeContentAsync("https://chataize.com");
+Console.WriteLine(homePageContent);
