@@ -176,14 +176,9 @@ public sealed class WebsiteScraper
         htmlDocument.Load(contentStream);
 
         var root = htmlDocument.DocumentNode;
-        var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]");
-
-        if (contentNode == null)
-        {
-            return string.Empty;
-        }
-
+        var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]") ?? root;
         var stringBuilder = new StringBuilder();
+
         foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//p"))
         {
             switch (node.Name)
