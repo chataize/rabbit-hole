@@ -57,18 +57,18 @@ public sealed class WebsiteScraper
 
     private readonly HttpClient _httpClient = new();
 
-    public async IAsyncEnumerable<string> ScrapeLinksAsync(string? url, int depth = 1, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<string> ScrapeLinksAsync(string url, int depth = 1, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            yield break;
+            throw new ArgumentException("URL cannot be null or whitespace.", nameof(url));
         }
 
         url = url.Trim().ToLowerInvariant();
 
         if (!Uri.TryCreate(url, UriKind.Absolute, out var rootUri))
         {
-            yield break;
+            throw new ArgumentException("The provided URL is invalid.", nameof(url));
         }
 
         yield return url;
@@ -156,16 +156,22 @@ public sealed class WebsiteScraper
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            return string.Empty;
+            throw new ArgumentException("URL cannot be null or whitespace.", nameof(url));
         }
 
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {
-            return string.Empty;
+            throw new ArgumentException("The provided URL is invalid.", nameof(url));
         }
 
         using var response = await _httpClient.GetAsync(uri, cancellationToken);
-        if (!response.IsSuccessStatusCode || !response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != false)
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"Failed to retrieve content from '{url}'. Status code: {response.StatusCode}.");
+        }
+
+        if (response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != true)
         {
             return string.Empty;
         }
