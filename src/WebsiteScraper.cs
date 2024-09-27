@@ -203,7 +203,7 @@ public sealed partial class WebsiteScraper
         var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]") ?? root;
         var stringBuilder = new StringBuilder();
 
-        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//h4 | .//h5 | .//h6 | .//p"))
+        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//h4 | .//h5 | .//h6 | .//p | .//ul | .//ol"))
         {
             var trimmedText = SpaceRegex().Replace(node.InnerText.Trim(), " ");
             switch (node.Name)
@@ -228,6 +228,22 @@ public sealed partial class WebsiteScraper
                     break;
                 case "p":
                     stringBuilder.AppendLine(trimmedText);
+                    break;
+                case "ul":
+                    foreach (var liNode in node.SelectNodes(".//li"))
+                    {
+                        var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
+                        stringBuilder.AppendLine($"- {listItemText}");
+                    }
+                    break;
+                case "ol":
+                    var itemIndex = 1;
+                    foreach (var liNode in node.SelectNodes(".//li"))
+                    {
+                        var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
+                        stringBuilder.AppendLine($"{itemIndex}. {listItemText}");
+                        itemIndex++;
+                    }
                     break;
             }
         }
