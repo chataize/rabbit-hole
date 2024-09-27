@@ -150,6 +150,12 @@ public sealed class WebsiteScraper
                     foundUrl = foundUrl[..queryIndex];
                 }
 
+                var hashIndex = foundUrl.IndexOf('#');
+                if (hashIndex > 0)
+                {
+                    foundUrl = foundUrl[..hashIndex];
+                }
+
                 if (foundUrls.Add(foundUrl))
                 {
                     urlsToVisit.Enqueue(new LinkCandidate(foundUrl, currentUrl.Depth + 1));
