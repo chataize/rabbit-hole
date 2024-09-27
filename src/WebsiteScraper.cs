@@ -74,7 +74,7 @@ public sealed partial class WebsiteScraper
 
         yield return url;
 
-        if (depth < 1)
+        if (depth < 2)
         {
             yield break;
         }
@@ -154,12 +154,12 @@ public sealed partial class WebsiteScraper
 
                 if (foundUrls.Add(foundUrl))
                 {
-                    if (currentUrl.Depth + 1 <= depth)
+                    yield return foundUrl;
+
+                    if (currentUrl.Depth + 1 < depth)
                     {
                         urlsToVisit.Enqueue(new LinkCandidate(foundUrl, currentUrl.Depth + 1));
                     }
-
-                    yield return foundUrl;
                 }
             }
         }
