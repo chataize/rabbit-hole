@@ -1,11 +1,12 @@
 ﻿using System.Collections.Frozen;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace ChatAIze.RabbitHole;
 
-public sealed class WebsiteScraper
+public sealed partial class WebsiteScraper
 {
     private static readonly FrozenSet<string> ignoredExtensions = new List<string>(
     [
@@ -199,35 +200,29 @@ public sealed class WebsiteScraper
 
         foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//h4 | .//h5 | .//h6 | .//p"))
         {
+            var trimmedText = SpaceRegex().Replace(node.InnerText.Trim(), " ");
             switch (node.Name)
             {
                 case "h1":
-                    stringBuilder.AppendLine($"# {node.InnerText.Trim()}");
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"# {trimmedText}");
                     break;
                 case "h2":
-                    stringBuilder.AppendLine($"## {node.InnerText.Trim()}");
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"## {trimmedText}");
                     break;
                 case "h3":
-                    stringBuilder.AppendLine($"### {node.InnerText.Trim()}");
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"### {trimmedText}");
                     break;
                 case "h4":
-                    stringBuilder.AppendLine($"#### {node.InnerText.Trim()}");
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"#### {trimmedText}");
                     break;
                 case "h5":
-                    stringBuilder.AppendLine($"##### {node.InnerText.Trim()}");
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"##### {trimmedText}");
                     break;
                 case "h6":
-                    stringBuilder.AppendLine($"###### {node.InnerText.Trim()}");
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"###### {trimmedText}");
                     break;
                 case "p":
-                    stringBuilder.AppendLine(node.InnerText.Trim());
-                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine(trimmedText);
                     break;
             }
         }
@@ -236,4 +231,7 @@ public sealed class WebsiteScraper
     }
 
     private record LinkCandidate(string Url, int Depth);
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex SpaceRegex();
 }
