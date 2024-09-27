@@ -165,7 +165,7 @@ public sealed partial class WebsiteScraper
         }
     }
 
-    public async Task<string> ScrapeContentAsync(string? url, CancellationToken cancellationToken = default)
+    public async Task<PageDetails> ScrapeContentAsync(string? url, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -186,7 +186,7 @@ public sealed partial class WebsiteScraper
 
         if (response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != true)
         {
-            return string.Empty;
+            return new PageDetails(url, null, null, null);
         }
 
         var htmlDocument = new HtmlDocument();
@@ -195,6 +195,11 @@ public sealed partial class WebsiteScraper
         htmlDocument.Load(contentStream);
 
         var root = htmlDocument.DocumentNode;
+
+        var title = root.SelectSingleNode("//title")?.InnerText.Trim();
+        var metaDescription = root.SelectSingleNode("//meta[@name='description']")?.GetAttributeValue("content", "").Trim();
+        var keywords = root.SelectSingleNode("//meta[@name='keywords']")?.GetAttributeValue("content", "").Trim();
+
         var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]") ?? root;
         var stringBuilder = new StringBuilder();
 
@@ -227,7 +232,7 @@ public sealed partial class WebsiteScraper
             }
         }
 
-        return stringBuilder.ToString();
+        return new PageDetails(url, title, keywords, stringBuilder.ToString());
     }
 
     private record LinkCandidate(string Url, int Depth);
