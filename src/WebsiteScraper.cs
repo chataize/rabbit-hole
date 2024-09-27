@@ -56,7 +56,10 @@ public sealed partial class WebsiteScraper
         ".zip",
     ]).ToFrozenSet();
 
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient = new()
+    {
+        Timeout = TimeSpan.FromSeconds(10),
+    };
 
     public async IAsyncEnumerable<string> ScrapeLinksAsync(string url, int depth = 2, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
