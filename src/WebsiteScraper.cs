@@ -168,7 +168,7 @@ public sealed partial class WebsiteScraper
         }
     }
 
-    public async Task<PageDetails> ScrapeContentAsync(string? url, CancellationToken cancellationToken = default)
+    public async Task<PageDetails> ScrapeContentAsync(string url, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
