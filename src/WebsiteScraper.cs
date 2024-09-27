@@ -123,7 +123,7 @@ public sealed class WebsiteScraper
 
                 foundUrl = foundUrl.Trim().ToLowerInvariant();
 
-                if (foundUrl.StartsWith('#') || foundUrl.StartsWith("mailto:"))
+                if (foundUrl.StartsWith('#') || foundUrl.StartsWith("mailto:") || foundUrl.StartsWith("tel:"))
                 {
                     continue;
                 }
