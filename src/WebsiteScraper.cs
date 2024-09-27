@@ -185,7 +185,7 @@ public sealed class WebsiteScraper
         var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]") ?? root;
         var stringBuilder = new StringBuilder();
 
-        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//p"))
+        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//h4 | .//h5 | .//h6 | .//p"))
         {
             switch (node.Name)
             {
@@ -199,6 +199,18 @@ public sealed class WebsiteScraper
                     break;
                 case "h3":
                     stringBuilder.AppendLine($"### {node.InnerText.Trim()}");
+                    stringBuilder.AppendLine();
+                    break;
+                case "h4":
+                    stringBuilder.AppendLine($"#### {node.InnerText.Trim()}");
+                    stringBuilder.AppendLine();
+                    break;
+                case "h5":
+                    stringBuilder.AppendLine($"##### {node.InnerText.Trim()}");
+                    stringBuilder.AppendLine();
+                    break;
+                case "h6":
+                    stringBuilder.AppendLine($"###### {node.InnerText.Trim()}");
                     stringBuilder.AppendLine();
                     break;
                 case "p":
