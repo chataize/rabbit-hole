@@ -95,16 +95,23 @@ public sealed class WebsiteScraper
                 continue;
             }
 
-            using var response = await _httpClient.GetAsync(currentUrl.Url, cancellationToken);
-            if (!response.IsSuccessStatusCode || !response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != false)
+            var htmlDocument = new HtmlDocument();
+
+            try
+            {
+                using var response = await _httpClient.GetAsync(currentUrl.Url, cancellationToken);
+                if (!response.IsSuccessStatusCode || !response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != false)
+                {
+                    continue;
+                }
+
+                using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                htmlDocument.Load(contentStream);
+            }
+            catch
             {
                 continue;
             }
-
-            var htmlDocument = new HtmlDocument();
-            using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-
-            htmlDocument.Load(contentStream);
 
             foreach (var node in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
             {
