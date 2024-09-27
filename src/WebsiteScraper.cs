@@ -262,19 +262,28 @@ public sealed partial class WebsiteScraper
                     stringBuilder.AppendLine(paragraphContent.ToString());
                     break;
                 case "ul":
-                    foreach (var liNode in node.SelectNodes(".//li"))
+                    var liNodes = node.SelectNodes(".//li");
+                    if (liNodes != null)
                     {
-                        var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
-                        stringBuilder.AppendLine($"- {listItemText}");
+                        foreach (var liNode in node.SelectNodes(".//li"))
+                        {
+                            var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
+                            stringBuilder.AppendLine($"- {listItemText}");
+                        }
                     }
                     break;
                 case "ol":
                     var itemIndex = 1;
-                    foreach (var liNode in node.SelectNodes(".//li"))
+                    var liNodes2 = node.SelectNodes(".//li");
+
+                    if (liNodes2 != null)
                     {
-                        var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
-                        stringBuilder.AppendLine($"{itemIndex}. {listItemText}");
-                        itemIndex++;
+                        foreach (var liNode in node.SelectNodes(".//li"))
+                        {
+                            var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
+                            stringBuilder.AppendLine($"{itemIndex}. {listItemText}");
+                            itemIndex++;
+                        }
                     }
                     break;
             }
