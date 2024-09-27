@@ -81,18 +81,13 @@ public sealed class WebsiteScraper
         var foundUrls = new HashSet<string>();
         var urlsToVisit = new Queue<LinkCandidate>();
 
-        urlsToVisit.Enqueue(new LinkCandidate(url, 0));
+        urlsToVisit.Enqueue(new LinkCandidate(url, 1));
 
         while (urlsToVisit.TryDequeue(out var currentUrl))
         {
             if (cancellationToken.IsCancellationRequested)
             {
                 yield break;
-            }
-
-            if (currentUrl.Depth >= depth)
-            {
-                continue;
             }
 
             var htmlDocument = new HtmlDocument();
@@ -158,7 +153,11 @@ public sealed class WebsiteScraper
 
                 if (foundUrls.Add(foundUrl))
                 {
-                    urlsToVisit.Enqueue(new LinkCandidate(foundUrl, currentUrl.Depth + 1));
+                    if (currentUrl.Depth + 1 <= depth)
+                    {
+                        urlsToVisit.Enqueue(new LinkCandidate(foundUrl, currentUrl.Depth + 1));
+                    }
+
                     yield return foundUrl;
                 }
             }
