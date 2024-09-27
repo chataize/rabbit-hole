@@ -230,7 +230,36 @@ public sealed partial class WebsiteScraper
                     stringBuilder.AppendLine($"###### {trimmedText}");
                     break;
                 case "p":
-                    stringBuilder.AppendLine(trimmedText);
+                    var paragraphContent = new StringBuilder();
+                    foreach (var child in node.ChildNodes)
+                    {
+                        if (child.Name == "img")
+                        {
+                            var imgSrc = child.GetAttributeValue("src", "");
+                            var imgAlt = child.GetAttributeValue("alt", "").Trim();
+
+                            if (!string.IsNullOrEmpty(imgSrc))
+                            {
+                                paragraphContent.AppendLine($"![{imgAlt}]({imgSrc})");
+                            }
+                        }
+                        else if (child.Name == "a")
+                        {
+                            var href = child.GetAttributeValue("href", "");
+                            var linkText = SpaceRegex().Replace(child.InnerText.Trim(), " ");
+
+                            if (!string.IsNullOrEmpty(href))
+                            {
+                                paragraphContent.Append($"[{linkText}]({href})");
+                            }
+                        }
+                        else
+                        {
+                            var text = SpaceRegex().Replace(child.InnerText.Trim(), " ");
+                            paragraphContent.Append(text);
+                        }
+                    }
+                    stringBuilder.AppendLine(paragraphContent.ToString());
                     break;
                 case "ul":
                     foreach (var liNode in node.SelectNodes(".//li"))
