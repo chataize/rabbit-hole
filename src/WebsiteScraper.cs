@@ -57,7 +57,7 @@ public sealed class WebsiteScraper
 
     private readonly HttpClient _httpClient = new();
 
-    public async IAsyncEnumerable<string> ScrapeLinksAsync(string url, int depth = 1, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<string> ScrapeLinksAsync(string url, int depth = 2, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
