@@ -58,7 +58,7 @@ public sealed partial class WebsiteScraper
 
     private readonly HttpClient _httpClient = new()
     {
-        Timeout = TimeSpan.FromSeconds(10),
+        Timeout = TimeSpan.FromSeconds(60),
     };
 
     public async IAsyncEnumerable<string> ScrapeLinksAsync(string url, int depth = 2, [EnumeratorCancellation] CancellationToken cancellationToken = default)
