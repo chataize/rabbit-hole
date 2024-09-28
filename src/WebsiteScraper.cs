@@ -212,22 +212,22 @@ public sealed partial class WebsiteScraper
             switch (node.Name)
             {
                 case "h1":
-                    stringBuilder.AppendLine($"# {trimmedText}");
+                    _ = stringBuilder.AppendLine($"# {trimmedText}");
                     break;
                 case "h2":
-                    stringBuilder.AppendLine($"## {trimmedText}");
+                    _ = stringBuilder.AppendLine($"## {trimmedText}");
                     break;
                 case "h3":
-                    stringBuilder.AppendLine($"### {trimmedText}");
+                    _ = stringBuilder.AppendLine($"### {trimmedText}");
                     break;
                 case "h4":
-                    stringBuilder.AppendLine($"#### {trimmedText}");
+                    _ = stringBuilder.AppendLine($"#### {trimmedText}");
                     break;
                 case "h5":
-                    stringBuilder.AppendLine($"##### {trimmedText}");
+                    _ = stringBuilder.AppendLine($"##### {trimmedText}");
                     break;
                 case "h6":
-                    stringBuilder.AppendLine($"###### {trimmedText}");
+                    _ = stringBuilder.AppendLine($"###### {trimmedText}");
                     break;
                 case "p":
                     var paragraphContent = new StringBuilder();
@@ -240,7 +240,7 @@ public sealed partial class WebsiteScraper
 
                             if (!string.IsNullOrEmpty(imgSrc))
                             {
-                                paragraphContent.AppendLine($"![{imgAlt}]({imgSrc})");
+                                _ = paragraphContent.AppendLine($"![{imgAlt}]({imgSrc})");
                             }
                         }
                         else if (child.Name == "a")
@@ -250,16 +250,17 @@ public sealed partial class WebsiteScraper
 
                             if (!string.IsNullOrEmpty(href))
                             {
-                                paragraphContent.Append($"[{linkText}]({href})");
+                                _ = paragraphContent.Append($"[{linkText}]({href})");
                             }
                         }
                         else
                         {
                             var text = SpaceRegex().Replace(child.InnerText.Trim(), " ");
-                            paragraphContent.Append(text);
+                            _ = paragraphContent.Append(text);
                         }
                     }
-                    stringBuilder.AppendLine(paragraphContent.ToString());
+
+                    _ = stringBuilder.AppendLine(paragraphContent.ToString());
                     break;
                 case "ul":
                     var liNodes = node.SelectNodes(".//li");
@@ -268,9 +269,10 @@ public sealed partial class WebsiteScraper
                         foreach (var liNode in node.SelectNodes(".//li"))
                         {
                             var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
-                            stringBuilder.AppendLine($"- {listItemText}");
+                            _ = stringBuilder.AppendLine($"- {listItemText}");
                         }
                     }
+
                     break;
                 case "ol":
                     var itemIndex = 1;
@@ -281,10 +283,11 @@ public sealed partial class WebsiteScraper
                         foreach (var liNode in node.SelectNodes(".//li"))
                         {
                             var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
-                            stringBuilder.AppendLine($"{itemIndex}. {listItemText}");
+                            _ = stringBuilder.AppendLine($"{itemIndex}. {listItemText}");
                             itemIndex++;
                         }
                     }
+
                     break;
             }
         }
