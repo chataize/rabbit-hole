@@ -1,13 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Title>Rabbit Hole Preview</Title>
     <Product>Rabbit Hole</Product>
     <Version>0.2.4</Version>
     <Company>ChatAIze</Company>
     <Authors>Marcel Kwiatkowski</Authors>
     <Copyright>© ChatAIze 2024</Copyright>
-    <AssemblyName>ChatAIze.RabbitHole</AssemblyName>
-    <RootNamespace>ChatAIze.RabbitHole</RootNamespace>
-    <PackageId>ChatAIze.RabbitHole</PackageId>
+    <AssemblyName>ChatAIze.RabbitHole.Preview</AssemblyName>
+    <RootNamespace>ChatAIze.RabbitHole.Preview</RootNamespace>
+    <PackageId>ChatAIze.RabbitHole.Preview</PackageId>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://www.chataize.com</PackageProjectUrl>
@@ -18,8 +19,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
     <Description>
-      C# library for scraping text content from websites.
+      Simple console app showcasing the Rabbit Hole library.
     </Description>
     <PackageTags>
       .net, c#, content, csharp, document, documents, download, downloader, downloading, extract,
@@ -29,10 +31,16 @@
     </PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\" />
-    <None Include="../README.md" Pack="true" PackagePath="" />
+    <None
+        Include="icon.png"
+        Pack="true"
+        PackagePath="\" />
+    <None
+        Include="../README.md"
+        Pack="true"
+        PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.67" />
+    <ProjectReference Include="../src/ChatAIze.RabbitHole.csproj" />
   </ItemGroup>
 </Project>
