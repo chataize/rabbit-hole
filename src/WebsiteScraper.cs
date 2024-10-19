@@ -85,6 +85,7 @@ public sealed partial class WebsiteScraper
         var foundUrls = new HashSet<string>();
         var urlsToVisit = new Queue<LinkCandidate>();
 
+        foundUrls.Add(url);
         urlsToVisit.Enqueue(new LinkCandidate(url, 1));
 
         while (urlsToVisit.TryDequeue(out var currentUrl))
