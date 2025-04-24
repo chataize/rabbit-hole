@@ -113,7 +113,7 @@ public sealed partial class WebsiteScraper
                 continue;
             }
 
-            foreach (var node in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
+            foreach (var node in htmlDocument.DocumentNode.SelectNodes("//a[@href]") ?? Enumerable.Empty<HtmlNode>())
             {
                 var foundUrl = node.GetAttributeValue("href", string.Empty);
                 if (string.IsNullOrWhiteSpace(foundUrl) || foundUrl == "/")
@@ -207,7 +207,7 @@ public sealed partial class WebsiteScraper
         var contentNode = root.SelectSingleNode("//article") ?? root.SelectSingleNode("//main") ?? root.SelectSingleNode("//div[contains(@class, 'content')]") ?? root;
         var stringBuilder = new StringBuilder();
 
-        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//h4 | .//h5 | .//h6 | .//p | .//ul | .//ol"))
+        foreach (var node in contentNode.SelectNodes(".//h1 | .//h2 | .//h3 | .//h4 | .//h5 | .//h6 | .//p | .//ul | .//ol") ?? Enumerable.Empty<HtmlNode>())
         {
             var trimmedText = SpaceRegex().Replace(node.InnerText.Trim(), " ");
             switch (node.Name)
@@ -267,7 +267,7 @@ public sealed partial class WebsiteScraper
                     var liNodes = node.SelectNodes(".//li");
                     if (liNodes != null)
                     {
-                        foreach (var liNode in node.SelectNodes(".//li"))
+                        foreach (var liNode in node.SelectNodes(".//li") ?? Enumerable.Empty<HtmlNode>())
                         {
                             var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
                             _ = stringBuilder.AppendLine($"- {listItemText}");
@@ -281,7 +281,7 @@ public sealed partial class WebsiteScraper
 
                     if (liNodes2 != null)
                     {
-                        foreach (var liNode in node.SelectNodes(".//li"))
+                        foreach (var liNode in node.SelectNodes(".//li") ?? Enumerable.Empty<HtmlNode>())
                         {
                             var listItemText = SpaceRegex().Replace(liNode.InnerText.Trim(), " ");
                             _ = stringBuilder.AppendLine($"{itemIndex}. {listItemText}");
