@@ -39,6 +39,6 @@
     <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../src/ChatAIze.RabbitHole.csproj" />
+    <ProjectReference Include="../ChatAIze.RabbitHole/ChatAIze.RabbitHole.csproj" />
   </ItemGroup>
 </Project>
