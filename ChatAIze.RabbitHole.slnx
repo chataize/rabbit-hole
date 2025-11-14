@@ -1,3 +1,4 @@
 ﻿<Solution>
   <Project Path="ChatAIze.RabbitHole/ChatAIze.RabbitHole.csproj" />
+  <Project Path="ChatAIze.RabbitHole.Preview/ChatAIze.RabbitHole.Preview.csproj" />
 </Solution>
