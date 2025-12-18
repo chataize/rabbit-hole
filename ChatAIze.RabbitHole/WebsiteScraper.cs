@@ -6,9 +6,14 @@ using HtmlAgilityPack;
 
 namespace ChatAIze.RabbitHole;
 
+/// <summary>
+/// Crawls a website to discover in-scope links and extracts readable content from HTML pages.
+/// </summary>
 public sealed partial class WebsiteScraper
 {
-    // Static list of asset extensions we never want to crawl as HTML pages.
+    /// <summary>
+    /// Lowercased file extensions that indicate non-HTML assets to skip during link discovery.
+    /// </summary>
     private static readonly FrozenSet<string> ignoredExtensions = new List<string>(
     [
         ".7z",
@@ -57,12 +62,29 @@ public sealed partial class WebsiteScraper
         ".zip",
     ]).ToFrozenSet();
 
-    // Reuse a single HttpClient instance to keep connection pooling efficient.
+    /// <summary>
+    /// Shared HTTP client used for all requests to keep connections pooled, with a 60-second timeout.
+    /// </summary>
     private readonly HttpClient _httpClient = new()
     {
         Timeout = TimeSpan.FromSeconds(60),
     };
 
+    /// <summary>
+    /// Asynchronously discovers in-scope links starting from the provided URL.
+    /// </summary>
+    /// <param name="url">The absolute root URL to start crawling from.</param>
+    /// <param name="depth">The maximum traversal depth (root is depth 1); values less than 2 only return the root URL.</param>
+    /// <param name="cancellationToken">The token used to cancel the crawl.</param>
+    /// <returns>An async sequence of normalized, de-duplicated URLs discovered during the crawl.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="url" /> is null, empty, or invalid.</exception>
+    /// <remarks>
+    /// The crawl uses breadth-first traversal, only parses <c>text/html</c> responses, and ignores mailto/tel/anchor-only links.
+    /// URLs are normalized by trimming, lowercasing, removing query strings and fragments, and staying within the root URL prefix.
+    /// Relative links without a leading slash are ignored because they do not match the root prefix.
+    /// Because URLs are lowercased, paths that are case-sensitive on the server may be treated as equivalent.
+    /// The sequence yields URLs as they are discovered and stops early if the cancellation token is triggered.
+    /// </remarks>
     public async IAsyncEnumerable<string> ScrapeLinksAsync(string url, int depth = 2, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -189,6 +211,19 @@ public sealed partial class WebsiteScraper
         }
     }
 
+    /// <summary>
+    /// Downloads a page and extracts a Markdown-like representation of its content.
+    /// </summary>
+    /// <param name="url">The absolute URL to fetch and parse.</param>
+    /// <param name="cancellationToken">The token used to cancel the fetch.</param>
+    /// <returns>The extracted metadata and content for the requested page.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="url" /> is null, empty, or invalid.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the request fails or returns a non-success status.</exception>
+    /// <remarks>
+    /// If the response is not HTML, the returned metadata and content fields are null.
+    /// Extraction prefers <c>article</c>, <c>main</c>, or <c>div.content</c> and renders headings, paragraphs, and lists
+    /// into Markdown-style text while preserving inline links and images, with whitespace collapsed for readability.
+    /// </remarks>
     public async ValueTask<PageDetails> ScrapeContentAsync(string url, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -210,7 +245,7 @@ public sealed partial class WebsiteScraper
             throw new HttpRequestException($"Failed to retrieve content from '{url}'. Status code: {response.StatusCode}.");
         }
 
-        // For non-HTML responses, return empty content while keeping the URL.
+        // For non-HTML responses, return null metadata/content while keeping the URL.
         if (response.Content.Headers.ContentType?.MediaType?.Equals("text/html", StringComparison.InvariantCulture) != true)
         {
             return new PageDetails(url, null, null, null, null);
@@ -332,10 +367,16 @@ public sealed partial class WebsiteScraper
         return new PageDetails(url, title, description, keywords, stringBuilder.ToString());
     }
 
-    // Simple container for the BFS crawl queue.
+    /// <summary>
+    /// Queue item for breadth-first link traversal.
+    /// </summary>
+    /// <param name="Url">The URL to visit.</param>
+    /// <param name="Depth">The current traversal depth for the URL, where the root is depth 1.</param>
     private record LinkCandidate(string Url, int Depth);
 
-    // Collapse repeated whitespace to keep extracted text readable.
+    /// <summary>
+    /// Builds the compiled regex used to collapse consecutive whitespace in extracted text.
+    /// </summary>
     [GeneratedRegex(@"\s+")]
     private static partial Regex SpaceRegex();
 }
