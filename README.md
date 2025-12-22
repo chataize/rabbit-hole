@@ -194,6 +194,11 @@ Run the preview app:
 dotnet run --project ChatAIze.RabbitHole.Preview
 ```
 
+## Links
+- GitHub: https://github.com/chataize/rabbit-hole
+- Chataize organization: https://github.com/chataize
+- Website: https://www.chataize.com
+
 ## License
 
 GPL-3.0-or-later. See `LICENSE.txt`.
